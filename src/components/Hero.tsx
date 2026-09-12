@@ -3,6 +3,7 @@ import { site } from '../data/site';
 import type { Schedule } from '../hooks/useService';
 import { HeroWave } from '../illustrations/HeroWave';
 import { Botany } from './Botany';
+import { PastryRain } from './PastryRain';
 import '../styles/hero.css';
 
 /** Each staged element gets its own beat, in ms after the page is revealed. */
@@ -31,6 +32,7 @@ export function Hero({
   return (
     <section className="hero" id="top">
       <div className="hero__ground" aria-hidden="true" />
+      <PastryRain />
       <Botany field="hero" />
 
       <div className="shell hero__inner">

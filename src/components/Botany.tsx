@@ -37,6 +37,10 @@ const fields: Record<string, Placement[]> = {
     { Art: Whisk, x: 3, y: 60, w: 62, rotate: 8, sway: 25, delay: -17, compact: true },
     { Art: WheatStalk, x: 50, y: 99, w: 46, rotate: -4, sway: 18, delay: -2, compact: true },
   ],
+  story: [
+    { Art: WheatStalk, x: 94, y: 24, w: 48, rotate: 10, sway: 20, delay: -4, compact: true },
+    { Art: ThymeSprig, x: 5, y: 80, w: 110, rotate: -8, sway: 24, delay: -12 },
+  ],
 };
 
 /**

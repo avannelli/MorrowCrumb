@@ -42,7 +42,7 @@ export const pastries: Pastry[] = [
     category: 'Laminated',
     group: 'Morning',
     description:
-      'Yesterday’s croissant soaked in wildflower honey syrup, filled with almond cream and baked a second time until the edges candy.',
+      'Soaked in wildflower honey, filled with almond cream, baked twice until the edges candy.',
     price: 5.75,
     Art: AlmondCroissant,
     feature: 'Baker’s Pick',
@@ -55,7 +55,7 @@ export const pastries: Pastry[] = [
     category: 'Viennoiserie',
     group: 'Morning',
     description:
-      'Pears poached in vanilla and white wine, fanned over brown butter frangipane on a slow-proofed danish base.',
+      'Vanilla-poached pear fanned over brown butter frangipane.',
     price: 6.25,
     Art: PearDanish,
     ingredients: ['Vanilla-poached pear', 'Beurre noisette', 'Frangipane', 'Demerara'],
@@ -66,7 +66,7 @@ export const pastries: Pastry[] = [
     category: 'Tart',
     group: 'All Day',
     description:
-      'A dark rye shell, bitter chocolate ganache set overnight, finished with flaked salt and a thin sheet of cocoa nib praline.',
+      'Dark rye shell, bitter ganache set overnight, flaked salt and nib praline.',
     price: 6.5,
     Art: RyeTart,
     ingredients: ['Dark rye', '70% couverture', 'Cocoa nib praline', 'Flaked sea salt'],
@@ -77,7 +77,7 @@ export const pastries: Pastry[] = [
     category: 'Bun',
     group: 'Morning',
     description:
-      'Croissant dough rolled with vanilla bean sugar and orange zest, baked in the pan so the base turns to caramel.',
+      'Croissant dough rolled in vanilla sugar and orange zest, pan-baked to caramel.',
     price: 5.25,
     Art: MorningBun,
     feature: 'Today’s Bake',
@@ -89,7 +89,7 @@ export const pastries: Pastry[] = [
     category: 'Petit four',
     group: 'All Day',
     description:
-      'Nutty buckwheat flour, beurre noisette and muscovado, baked small so the edges stay crisp and the centre stays damp.',
+      'Buckwheat, beurre noisette and muscovado — crisp at the edge, damp in the middle.',
     price: 3.75,
     Art: Financier,
     ingredients: ['Buckwheat flour', 'Muscovado', 'Beurre noisette', 'Egg white'],
@@ -100,7 +100,7 @@ export const pastries: Pastry[] = [
     category: 'Choux',
     group: 'All Day',
     description:
-      'Craquelin-topped choux filled with salted caramel crème diplomat, piped to order through the morning.',
+      'Craquelin choux, salted caramel crème diplomat, piped to order.',
     price: 5.0,
     Art: CaramelChoux,
     ingredients: ['Craquelin', 'Salted caramel', 'Crème diplomat', 'Guérande salt'],
@@ -111,7 +111,7 @@ export const pastries: Pastry[] = [
     category: 'Layered',
     group: 'All Day',
     description:
-      'Three sheets of caramelised puff, hazelnut praline crème légère, built to order so the layers still shatter.',
+      'Three sheets of caramelised puff with hazelnut praline crème légère.',
     price: 7.0,
     Art: MilleFeuille,
     note: 'Made in one small batch each afternoon',
@@ -123,7 +123,7 @@ export const pastries: Pastry[] = [
     category: 'Seasonal',
     group: 'Seasonal',
     description:
-      'Slow-roasted quince with lemon thyme, folded into rough puff and dusted with raw sugar. On the counter while the fruit lasts.',
+      'Slow-roasted quince and lemon thyme in rough puff, dusted with raw sugar.',
     price: 6.75,
     Art: QuinceGalette,
     note: 'Autumn',

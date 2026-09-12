@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Menu } from './components/Menu';
+import { Story } from './components/Story';
+import { ContactModal } from './components/ContactModal';
 import { Footer } from './components/Footer';
 import { useService } from './hooks/useService';
 import { usePageTransition } from './hooks/usePageTransition';
@@ -25,6 +27,7 @@ export default function App() {
     return () => window.clearTimeout(timer);
   }, [revealed]);
   const schedule = useService();
+  const [contactOpen, setContactOpen] = useState(false);
   const { phase, landed, navigate } = usePageTransition();
 
   return (
@@ -36,14 +39,30 @@ export default function App() {
       {/* the warm wash that carries one section into the next */}
       <div className="veil" aria-hidden="true" />
 
-      <Header onRevealed={handleRevealed} onNavigate={navigate} landed={landed} />
+      <Header
+        onRevealed={handleRevealed}
+        onNavigate={navigate}
+        onContact={() => setContactOpen(true)}
+        landed={landed}
+      />
 
       <main id="main">
         <Hero schedule={schedule} onNavigate={navigate} />
         <Menu />
+        <Story />
       </main>
 
-      <Footer service={schedule.service} onNavigate={navigate} />
+      <Footer
+        service={schedule.service}
+        onNavigate={navigate}
+        onContact={() => setContactOpen(true)}
+      />
+
+      <ContactModal
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
+        schedule={schedule}
+      />
     </div>
   );
 }

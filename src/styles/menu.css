@@ -2,7 +2,7 @@
    The menu — a printed sheet, folded once down the middle
    ========================================================= */
 .menu {
-  padding-block: clamp(3.5rem, 7vw, 6rem);
+  padding-block: clamp(3.5rem, 7vw, 6rem) clamp(2.25rem, 4vw, 3.25rem);
   /* the trellis, kept as tokens so its weight is tunable in one place */
   --lattice-fine: 22px;
   --lattice-main: 66px;
@@ -740,6 +740,16 @@
   /* names wrap at this width, so the leaders would be reduced to a stub */
   .pastry__leaders {
     display: none;
+  }
+
+  /* a comfortable target, and room between the rows it sits between */
+  .pastry__toggle {
+    min-height: 44px;
+    margin-top: 0.3rem;
+  }
+
+  .pastry {
+    padding-block: 1.35rem;
   }
 
   .pastry__price {

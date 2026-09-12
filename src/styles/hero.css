@@ -85,6 +85,54 @@
   min-height: min(64vh, 32rem);
 }
 
+/* =========================================================
+   Pastries falling behind the type
+   -----------------------------------------------------------
+   The fall is measured in container-query height, so a drop crosses the hero
+   whatever height the hero happens to be — a fixed pixel travel would leave a
+   gap in each lane on a short hero and overshoot on a tall one.
+   ========================================================= */
+.rain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+
+.rain__drop {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: var(--size);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: pastry-fall var(--dur) linear var(--delay) infinite;
+}
+
+.rain__art {
+  width: 100%;
+  height: auto;
+}
+
+@keyframes pastry-fall {
+  0% {
+    transform: translate3d(-50%, -22cqh, 0) rotate(var(--from));
+    opacity: 0;
+  }
+  12% {
+    opacity: var(--fade);
+  }
+  84% {
+    opacity: var(--fade);
+  }
+  100% {
+    transform: translate3d(calc(-50% + var(--drift)), 114cqh, 0) rotate(var(--to));
+    opacity: 0;
+  }
+}
+
 /* ---------- headline ---------- */
 .hero__eyebrow {
   display: flex;
@@ -463,6 +511,21 @@
 
 .page[data-revealed='true'] .hero__wave {
   color: var(--hero);
+}
+
+/* the drops are sized in px, so on a phone they need trimming to stay airy
+   against a much narrower hero */
+@media (max-width: 620px) {
+  .rain__drop {
+    width: calc(var(--size) * 0.82);
+  }
+}
+
+/* the rain is decoration only; without motion it has nothing to say */
+@media (prefers-reduced-motion: reduce) {
+  .rain {
+    display: none;
+  }
 }
 
 /* =========================================================

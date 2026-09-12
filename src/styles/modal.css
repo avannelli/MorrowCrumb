@@ -1,0 +1,648 @@
+/* =========================================================
+   Contact dialog — the bakery's card, printed on the same stock
+   ========================================================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 3vw, 2.5rem);
+}
+
+/* ---------- the page behind, dimmed and softened ---------- */
+.modal__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  cursor: default;
+  background: #3a2a1259;
+  backdrop-filter: blur(5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(5px) saturate(1.05);
+  opacity: 0;
+  transition: opacity 260ms var(--ease);
+}
+
+.modal[data-state='open'] .modal__scrim {
+  opacity: 1;
+  transition: opacity 340ms var(--ease);
+}
+
+/* ---------- the card ---------- */
+.modal__card {
+  --card-pad: clamp(1.35rem, 3.2vw, 2.4rem);
+  position: relative;
+  width: min(860px, 100%);
+  max-height: min(90vh, 820px);
+  display: flex;
+  background: linear-gradient(150deg, #fffefc, #fbf7ee);
+  border: 1px solid #d9ccb5;
+  border-radius: 2px 3px 5px 2px;
+  box-shadow:
+    0 1px 0 #fffdf7 inset,
+    0 0 0 1px #fffdf766 inset,
+    0 18px 28px -26px #594322a6 inset,
+    0 24px 50px -24px #3a2a1273,
+    0 60px 110px -60px #3a2a1259;
+  opacity: 0;
+  transform: translateY(14px) scale(0.988);
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+}
+
+.modal[data-state='open'] .modal__card {
+  opacity: 1;
+  transform: none;
+  transition: opacity 420ms var(--ease-out), transform 460ms var(--ease-out);
+}
+
+/* the printed double rule, as on the menu sheet and the hours card */
+.modal__frame {
+  position: absolute;
+  inset: 8px;
+  border: 3px double #c9b48e80;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* the paper grain, over the print and under the type */
+.modal__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/paper-grain.svg');
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* a soft fade at the foot, so it reads as scrollable rather than cut off */
+.modal__card::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  height: 40px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, #fbf7ee00, #fbf7eee6);
+  border-radius: 0 0 2px 2px;
+}
+
+.modal__scroll {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--card-pad);
+}
+
+/* ---------- the close button ---------- */
+.modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: var(--honey-muted);
+  background: #fffefc;
+  border: 1px solid var(--panel-line);
+  box-shadow: 0 2px 10px -4px #59432240;
+  transition: color 280ms var(--ease), background 280ms var(--ease),
+    transform 380ms var(--ease-out), border-color 280ms var(--ease);
+}
+
+.modal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.modal__close:hover,
+.modal__close:focus-visible {
+  color: var(--chocolate);
+  background: #fffdf7;
+  border-color: var(--honey-line);
+  transform: rotate(90deg);
+}
+
+/* ---------- head ---------- */
+.modal__head {
+  text-align: center;
+  padding-right: 2.5rem;
+}
+
+.modal__title {
+  margin-top: 0.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.03em;
+  color: var(--chocolate);
+}
+
+.modal__title em {
+  font-style: italic;
+  color: var(--honey-figure);
+}
+
+.modal__rule {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: clamp(0.85rem, 2vw, 1.2rem);
+  color: var(--honey-figure);
+  font-size: 0.9rem;
+}
+
+.modal__rule::before,
+.modal__rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--panel-line);
+}
+
+/* ---------- the two panels ---------- */
+.modal__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(1.25rem, 3.5vw, 2.5rem);
+  margin-top: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.modal__label {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--honey-figure);
+}
+
+.modal__panel > .modal__label + * {
+  margin-top: 0.6rem;
+}
+
+.modal__panel > * + .modal__label {
+  margin-top: clamp(0.85rem, 2vw, 1.15rem);
+  padding-top: clamp(0.7rem, 1.6vw, 0.95rem);
+  border-top: 1px solid var(--panel-line);
+}
+
+.modal__address {
+  display: grid;
+  gap: 0.05rem;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--chocolate);
+}
+
+.modal__links {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.modal__social {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.modal__social a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 36px;
+  padding-inline: 0.4rem;
+  margin-inline: -0.4rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--honey-muted);
+  transition: color 280ms var(--ease), background 280ms var(--ease);
+}
+
+.modal__social-icon {
+  width: 19px;
+  height: 19px;
+  flex: none;
+}
+
+.modal__social a:hover,
+.modal__social a:focus-visible {
+  color: var(--chocolate);
+  background: color-mix(in srgb, var(--honey) 18%, transparent);
+}
+
+/* ---------- the week ---------- */
+.modal__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modal__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  background: #fffdf7;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.modal__state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--state-closed);
+}
+
+.modal__state[data-state='open'] {
+  border-color: color-mix(in srgb, var(--state-open) 40%, transparent);
+  color: var(--state-open);
+}
+
+.modal__state[data-state='open'] .modal__state-dot {
+  background: var(--state-open);
+}
+
+.modal__state[data-state='closing-soon'] {
+  border-color: color-mix(in srgb, var(--state-soon) 45%, transparent);
+  color: var(--state-soon);
+}
+
+.modal__state[data-state='closing-soon'] .modal__state-dot {
+  background: var(--state-soon);
+}
+
+.modal__week {
+  margin-top: 0.7rem;
+}
+
+.modal__week li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.32rem 0 0.32rem 0.85rem;
+}
+
+.modal__day {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.modal__leader {
+  flex: 1;
+  min-width: 0.75rem;
+  height: 1px;
+  margin-bottom: 0.24em;
+  background-image: radial-gradient(circle, var(--rule-strong) 0.5px, transparent 0.6px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  opacity: 0.5;
+}
+
+.modal__time {
+  flex: none;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--honey-muted);
+}
+
+.modal__week li[data-closed] .modal__time {
+  font-style: italic;
+  color: var(--rule-strong);
+}
+
+.modal__week li[data-today] .modal__day,
+.modal__week li[data-today] .modal__time {
+  color: var(--chocolate);
+}
+
+.modal__week li[data-today]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78em;
+  width: 4px;
+  height: 4px;
+  background: var(--caramel);
+  transform: rotate(45deg);
+}
+
+.modal__note {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 3px double var(--panel-line);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--honey-muted);
+}
+
+/* =========================================================
+   Leave a note
+   ========================================================= */
+.review {
+  margin-top: clamp(1.25rem, 3vw, 1.75rem);
+  padding-top: clamp(1.1rem, 2.6vw, 1.5rem);
+  border-top: 3px double var(--panel-line);
+}
+
+.review__head > p {
+  margin-top: 0.45rem;
+  max-width: 46ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.review__form {
+  display: grid;
+  gap: clamp(0.9rem, 2.2vw, 1.2rem);
+  margin-top: clamp(0.9rem, 2.2vw, 1.2rem);
+}
+
+/* ---------- rating ---------- */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  flex-wrap: wrap;
+}
+
+.rating__stars {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.rating__option {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  color: var(--rule-strong);
+  transition: color 260ms var(--ease), transform 320ms var(--ease-out);
+}
+
+.rating__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rating__star {
+  width: 24px;
+  height: 24px;
+}
+
+.rating__option[data-on] {
+  color: var(--caramel);
+}
+
+.rating__option:hover {
+  transform: translateY(-2px);
+}
+
+/* the keyboard ring lands on the label, since the radio itself is hidden */
+.rating__option:has(input:focus-visible) {
+  outline: 2px solid var(--chocolate);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.rating__word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--honey-muted);
+}
+
+/* ---------- the note itself ---------- */
+.review__field {
+  position: relative;
+}
+
+.review__field textarea {
+  width: 100%;
+  padding: 0.85rem 1rem 1.9rem;
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: #fffdf7;
+  border: 1px solid var(--panel-line);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 #fffdf7 inset, 0 10px 18px -18px #59432266 inset;
+  resize: vertical;
+  min-height: 92px;
+  transition: border-color 280ms var(--ease), box-shadow 280ms var(--ease);
+}
+
+.review__field textarea::placeholder {
+  color: var(--rule-strong);
+  font-style: italic;
+}
+
+.review__field textarea:focus {
+  outline: none;
+  border-color: var(--caramel);
+  box-shadow: 0 1px 0 #fffdf7 inset, 0 0 0 3px color-mix(in srgb, var(--caramel) 18%, transparent);
+}
+
+.review__count {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.6rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rule-strong);
+  pointer-events: none;
+  transition: color 280ms var(--ease);
+}
+
+.review__count[data-low] {
+  color: var(--caramel);
+}
+
+.review__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.review__aside {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.review__thanks {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: clamp(0.9rem, 2.2vw, 1.2rem);
+  padding: 1rem 1.15rem;
+  background: linear-gradient(150deg, #fffefccc, #f5efe2b3);
+  border: 1px dashed color-mix(in srgb, var(--panel-line) 80%, transparent);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--honey-muted);
+}
+
+.review__thanks > span {
+  color: var(--caramel);
+}
+
+/* =========================================================
+   Responsive — a sheet that fills the phone, not a shrunken card
+   ========================================================= */
+@media (max-width: 760px) {
+  .modal__cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  /* the second panel gains the rule the grid gap used to imply */
+  .modal__cols > .modal__panel + .modal__panel {
+    padding-top: clamp(1rem, 4vw, 1.4rem);
+    border-top: 1px solid var(--panel-line);
+  }
+}
+
+@media (max-width: 560px) {
+  .modal {
+    padding: 0;
+    place-items: end stretch;
+  }
+
+  .modal__card {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 0;
+  }
+
+  .modal__frame {
+    inset: 6px 6px 0;
+    border-bottom: 0;
+  }
+
+  /* a grab rail, so the sheet reads as something you pull up */
+  .modal__card::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--panel-line);
+    transform: translateX(-50%);
+    z-index: 3;
+  }
+
+  .modal__scroll {
+    padding: 2.1rem 1.15rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .modal__head {
+    text-align: left;
+    padding-right: 3rem;
+  }
+
+  .modal__rule::before {
+    display: none;
+  }
+
+  .modal__close {
+    top: 20px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* the card slides up from the foot rather than fading in place */
+  .modal__card {
+    transform: translateY(18px);
+  }
+
+  .modal__social a {
+    min-height: 44px;
+  }
+
+  .modal__links a {
+    display: inline-block;
+    padding-block: 0.35rem;
+  }
+
+  .rating {
+    gap: 0.5rem 0.9rem;
+  }
+
+  .rating__option {
+    width: 44px;
+    height: 44px;
+  }
+
+  .rating__star {
+    width: 26px;
+    height: 26px;
+  }
+
+  .review__actions .button {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .review__aside {
+    flex: 1 1 100%;
+  }
+}
+
+/* =========================================================
+   Reduced motion — the card simply appears
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .modal__card,
+  .modal__scrim {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .modal__close:hover,
+  .modal__close:focus-visible {
+    transform: none;
+  }
+}

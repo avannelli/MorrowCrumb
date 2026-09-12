@@ -20,9 +20,11 @@ const icons: Record<string, (props: { className?: string }) => React.ReactElemen
 export function Footer({
   service,
   onNavigate,
+  onContact,
 }: {
   service: Service;
   onNavigate: (href: string) => void;
+  onContact: () => void;
 }) {
   return (
     <footer className="footer">
@@ -58,6 +60,11 @@ export function Footer({
                 </a>
               </li>
             ))}
+            <li>
+              <button type="button" aria-haspopup="dialog" onClick={onContact}>
+                Contact
+              </button>
+            </li>
           </ul>
         </nav>
 

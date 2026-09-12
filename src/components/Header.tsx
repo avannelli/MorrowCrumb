@@ -16,11 +16,13 @@ const icons: Record<string, (props: { className?: string }) => React.ReactElemen
 type HeaderProps = {
   onRevealed: (revealed: boolean) => void;
   onNavigate: (href: string) => void;
+  /** Opens the contact dialog; Contact is an action, not a destination. */
+  onContact: () => void;
   /** The section a page transition has just landed on, if any. */
   landed: string | null;
 };
 
-export function Header({ onRevealed, onNavigate, landed }: HeaderProps) {
+export function Header({ onRevealed, onNavigate, onContact, landed }: HeaderProps) {
   const lockupRef = useRef<HTMLAnchorElement>(null);
   const markRef = useRef<HTMLSpanElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -214,6 +216,24 @@ export function Header({ onRevealed, onNavigate, landed }: HeaderProps) {
                 </a>
               </li>
             ))}
+
+            {/* Contact opens the card in place rather than going anywhere */}
+            <li
+              className="nav__item"
+              style={{ ['--i' as string]: site.nav.length } as CSSProperties}
+            >
+              <button
+                type="button"
+                className="nav__link"
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onContact();
+                }}
+              >
+                <span className="nav__label">Contact</span>
+              </button>
+            </li>
           </ul>
 
           <ul className="nav__social">

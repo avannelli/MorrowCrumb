@@ -86,6 +86,9 @@
 }
 
 html {
+  /* the gutter is reserved at all times, so hiding overflow for a dialog
+     cannot pull the page sideways as the scrollbar disappears */
+  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 1.5rem);
   -webkit-text-size-adjust: 100%;
@@ -481,7 +484,8 @@ button {
   gap: clamp(1rem, 2.2vw, 1.75rem);
 }
 
-.footer__nav a {
+.footer__nav a,
+.footer__nav button {
   position: relative;
   display: inline-block;
   padding-block: 0.3rem;
@@ -491,7 +495,8 @@ button {
   transition: color 300ms var(--ease);
 }
 
-.footer__nav a::after {
+.footer__nav a::after,
+.footer__nav button::after {
   content: '';
   position: absolute;
   left: 0;
@@ -505,12 +510,16 @@ button {
 }
 
 .footer__nav a:hover,
-.footer__nav a:focus-visible {
+.footer__nav button:hover,
+.footer__nav a:focus-visible,
+.footer__nav button:focus-visible {
   color: var(--honey-ink);
 }
 
 .footer__nav a:hover::after,
-.footer__nav a:focus-visible::after {
+.footer__nav button:hover::after,
+.footer__nav a:focus-visible::after,
+.footer__nav button:focus-visible::after {
   transform: none;
 }
 

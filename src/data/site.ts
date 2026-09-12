@@ -25,6 +25,22 @@ export const site = {
     { label: 'Home', href: '#top' },
     { label: 'Menu', href: '#menu' },
   ] satisfies NavItem[],
+  /** The brand story, set beneath the menu. */
+  story: {
+    eyebrow: 'How we work',
+    /** Set as two masked lines, the way the hero's headline is. */
+    headingLines: ['A short list,', 'baked once'],
+    paragraphs: [
+      'We write the day’s list the night before and bake it once. The lamination is folded by hand in the back room, the ovens are lit at four, and the counter fills as the trays come out.',
+      'What is growing nearby decides half of it — quince through the autumn, rhubarb when the spring turns. When a tray is gone it is gone. We would rather close early than bake a second, lesser batch.',
+    ],
+    /** Printed along the foot of the section, the way a colophon is set. */
+    figures: [
+      { value: '04:00', caption: 'Ovens lit' },
+      { value: '01', caption: 'Bake a day' },
+      { value: null, caption: 'On the list' },
+    ],
+  },
   disclaimer:
     'A fictional design concept — the bakery, its menu, hours and details are invented.',
 } as const;
