@@ -1,0 +1,561 @@
+/* =========================================================
+   Hero — warm paper, staged type, one pastry on a plate
+   ========================================================= */
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--cream);
+  padding-top: calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem));
+  padding-bottom: clamp(2.5rem, 6vh, 4rem);
+  transition: background 800ms var(--ease);
+}
+
+/* Held flat, so the scalloped divider below can take exactly the same colour
+   and the two meet with no edge between them. Every gradient lives in the
+   ground layer, which lifts before the foot. */
+.page[data-revealed='true'] .hero {
+  background: var(--hero);
+}
+
+/**
+ * The tactile part: a soft overhead glow, a barely-there grid of hairlines the
+ * way a proof sheet is ruled, and the paper grain over everything. Held in its
+ * own layer so the hero's own background colour can still animate underneath.
+ */
+.hero__ground {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease) 200ms;
+  background:
+    /* a soft sheen drawn across the ground, wide and low, so it reads as light
+       on the surface rather than as a band */
+    linear-gradient(
+      104deg,
+      #fffaeb00 6%,
+      #fffaeb54 28%,
+      #fffaeb75 39%,
+      #fffaeb33 56%,
+      #fffaeb00 78%
+    ),
+    /* the warm pool of light the counter sits in */
+    radial-gradient(78% 58% at 17% 0%, #fffdf7cc 0%, #fffdf700 62%),
+    /* and the honey that gathers where the light runs out */
+    radial-gradient(58% 48% at 90% 10%, #f0d29ea6 0%, #f0d29e00 72%),
+    /* the warm settle fades back out before the edge, so the hero meets the
+       scalloped divider on exactly the same colour and leaves no straight
+       line across the page */
+    linear-gradient(178deg, #fdfaf200 0%, #dcc08e3d 58%, #dcc08e00 100%);
+  /* everything in this layer, the ruling and the grain included, lifts before
+     the foot — the divider is the only edge on the page */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 76%, #0000 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 76%, #0000 100%);
+}
+
+.page[data-revealed='true'] .hero__ground {
+  opacity: 1;
+}
+
+.hero__ground::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/paper-grain.svg');
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  /* the grain fades out at the foot for the same reason */
+  -webkit-mask-image: linear-gradient(180deg, #000 78%, #0000 100%);
+  mask-image: linear-gradient(180deg, #000 78%, #0000 100%);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+  /* the hero is type and the week now, so it keeps a floor that holds the
+     proportions of the opening screen */
+  min-height: min(64vh, 32rem);
+}
+
+/* ---------- headline ---------- */
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.hero__eyebrow-rule {
+  width: clamp(1.5rem, 4vw, 3rem);
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.hero__title {
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+  font-size: clamp(2.75rem, 8vw, 6.25rem);
+  letter-spacing: -0.03em;
+}
+
+/* each line rises out of its own mask, so the type appears to be set */
+.hero__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.hero__line-inner {
+  display: block;
+  transform: translateY(105%);
+  opacity: 0;
+}
+
+.page[data-revealed='true'] .hero__line-inner {
+  transform: none;
+  opacity: 1;
+  transition: transform 1100ms var(--ease-out) var(--d, 0ms),
+    opacity 800ms var(--ease) var(--d, 0ms);
+}
+
+.hero__title em {
+  display: block;
+  font-style: italic;
+  color: var(--caramel);
+}
+
+/**
+ * The standfirst. Set in the menu's own serif, italic, against a hairline in
+ * the margin with a small lozenge at its head — the way a printed bill of fare
+ * introduces itself, rather than as another line of body copy.
+ */
+.hero__lede {
+  position: relative;
+  max-width: 36ch;
+  margin-top: clamp(1.5rem, 3vw, 2.1rem);
+  padding-left: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.02rem, 1.4vw, 1.2rem);
+  line-height: 1.65;
+  letter-spacing: 0.004em;
+  color: #5c5346;
+}
+
+.hero__lede::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  bottom: 0.35em;
+  width: 1px;
+  background: linear-gradient(180deg, var(--caramel), var(--panel-line) 38%, transparent);
+}
+
+.hero__lede::after {
+  content: '';
+  position: absolute;
+  left: -1.5px;
+  top: 0.42em;
+  width: 4px;
+  height: 4px;
+  background: var(--caramel);
+  transform: rotate(45deg);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* ---------- hours panel ---------- */
+.hero__aside {
+  display: grid;
+  align-content: stretch;
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  min-width: 0;
+}
+
+/* the headline column keeps its own bottom alignment against the panel */
+.hero__headline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---------- the week ---------- */
+/**
+ * Printed the way the big sheet is: the same off-white stock, a double-ruled
+ * frame inside the edge, paper grain over the print, and enough inner shadow
+ * that the card has thickness — a menu card rather than a UI panel.
+ */
+.hero__panel {
+  --panel-pad: clamp(1.4rem, 2.6vw, 1.9rem);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--panel-pad);
+  background: linear-gradient(112deg, #fffefc, #fbf7ee);
+  border: 1px solid #d9ccb5;
+  border-radius: 2px 3px 5px 2px;
+  box-shadow:
+    /* the thickness of the stock */
+    0 1px 0 #fffdf7 inset,
+    0 0 0 1px #fffdf766 inset,
+    0 14px 22px -22px #594322a6 inset,
+    0 -12px 18px -20px #59432280 inset,
+    /* and the card sitting on the page */
+    0 2px 3px #59432212,
+    0 14px 26px -16px #5943223d,
+    0 28px 50px -34px #59432229;
+}
+
+/* the sheet underneath, so this reads as one of a stack */
+.hero__aside {
+  position: relative;
+}
+
+.hero__aside::before {
+  content: '';
+  position: absolute;
+  inset: 7px -7px -8px 6px;
+  z-index: 0;
+  background: #f3ede1;
+  border: 1px solid #d9ccb5;
+  border-radius: 2px;
+  transform: rotate(-0.4deg);
+  box-shadow: 0 3px 6px #5943220f;
+  opacity: 0;
+  transition: opacity 700ms var(--ease) 600ms;
+}
+
+.page[data-revealed='true'] .hero__aside::before {
+  opacity: 1;
+}
+
+/* the double-ruled frame of a printed card */
+.hero__panel::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 3px double #c9b48e80;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* the paper grain, laid over the print but under the type */
+.hero__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/paper-grain.svg');
+  opacity: 0.75;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.hero__panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 3px double var(--panel-line);
+}
+
+.hero__panel-title {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--honey-figure);
+}
+
+/* the live state, set as a small pill */
+.hero__service {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  background: #fffdf7;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hero__service-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--state-closed);
+}
+
+.hero__service[data-state='open'] {
+  border-color: color-mix(in srgb, var(--state-open) 40%, transparent);
+  color: var(--state-open);
+}
+
+.hero__service[data-state='open'] .hero__service-dot {
+  background: var(--state-open);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--state-open) 16%, transparent);
+}
+
+.hero__service[data-state='closing-soon'] {
+  border-color: color-mix(in srgb, var(--state-soon) 45%, transparent);
+  color: var(--state-soon);
+}
+
+.hero__service[data-state='closing-soon'] .hero__service-dot {
+  background: var(--state-soon);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--state-soon) 18%, transparent);
+}
+
+/* ---------- the week, a day to a line ---------- */
+.hero__week {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  min-height: 0;
+  padding-block: 0.35rem;
+}
+
+.hero__day {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  /* the margin today's mark is set in, kept clear of the printed frame */
+  padding-left: 0.85rem;
+  padding-block: 0.42rem;
+  transition: color 320ms var(--ease);
+}
+
+.hero__day-name {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hero__day-short {
+  display: none;
+}
+
+/* the same dot leaders the menu is set with */
+.hero__day-leader {
+  flex: 1;
+  min-width: 0.75rem;
+  height: 1px;
+  margin-bottom: 0.24em;
+  background-image: radial-gradient(circle, var(--rule-strong) 0.5px, transparent 0.6px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  opacity: 0.5;
+}
+
+.hero__day-time {
+  flex: none;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--honey-muted);
+}
+
+.hero__day[data-closed] .hero__day-time {
+  font-style: italic;
+  color: var(--rule-strong);
+}
+
+/* today is set in the darker ink and marked in the margin */
+.hero__day[data-today] .hero__day-name,
+.hero__day[data-today] .hero__day-time {
+  color: var(--chocolate);
+}
+
+.hero__day[data-today] .hero__day-leader {
+  opacity: 0.8;
+}
+
+.hero__day[data-today]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78em;
+  width: 4px;
+  height: 4px;
+  background: var(--caramel);
+  transform: rotate(45deg);
+}
+
+/* ---------- where the day has got to ---------- */
+.hero__now {
+  margin-top: 0.85rem;
+  padding-top: 0.9rem;
+  border-top: 3px double var(--panel-line);
+}
+
+.hero__now-bar {
+  height: 3px;
+  margin-bottom: 0.7rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--panel-line) 70%, transparent);
+  overflow: hidden;
+}
+
+.hero__now-fill {
+  display: block;
+  width: var(--p, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--butter), var(--caramel));
+  transition: width 900ms var(--ease-out);
+}
+
+.hero__now[data-state='closing-soon'] .hero__now-fill {
+  background: linear-gradient(90deg, var(--caramel), var(--state-soon));
+}
+
+.hero__now-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--honey-muted);
+}
+
+/* ---------- the scalloped edge into the page below ---------- */
+.hero__wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  width: 100%;
+  height: clamp(20px, 2.6vw, 38px);
+  color: var(--cream);
+  transition: color 800ms var(--ease);
+  pointer-events: none;
+}
+
+.page[data-revealed='true'] .hero__wave {
+  color: var(--hero);
+}
+
+/* =========================================================
+   Responsive — a designed stack, not a collapsed grid
+   ========================================================= */
+@media (max-width: 900px) {
+  .hero {
+    padding-bottom: clamp(2rem, 5vh, 3rem);
+  }
+
+  .hero__main {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .hero__main {
+    min-height: 0;
+  }
+
+  .hero__aside {
+    align-content: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--panel-line);
+  }
+
+  /* the aside gains a rule and padding here, so the sheet underneath has to
+     start from the card rather than from the top of the column */
+  .hero__aside::before {
+    top: calc(1.5rem + 7px);
+  }
+
+  .hero__week {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero__eyebrow {
+    gap: 0.6rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+  }
+
+  .hero__eyebrow-rule {
+    display: none;
+  }
+
+  .hero__title {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+  }
+
+  .hero__lede {
+    max-width: none;
+    padding-left: 0;
+    padding-top: 1.1rem;
+    font-size: 1.08rem;
+  }
+
+  .hero__lede::before {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(90deg, var(--caramel), var(--panel-line) 30%, transparent);
+  }
+
+  .hero__lede::after {
+    left: 0;
+    top: -1.5px;
+  }
+
+  .hero__actions {
+    gap: 0.85rem 1.25rem;
+  }
+
+  .button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  /* short day names, so each line still holds its time on one row */
+  .hero__day-full {
+    display: none;
+  }
+
+  .hero__day-short {
+    display: inline;
+  }
+
+  .hero__day-name {
+    min-width: 2.6rem;
+  }
+}

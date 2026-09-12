@@ -7,78 +7,98 @@ type BrandMarkProps = {
 };
 
 /**
- * Morrow & Crumb primary mark: an open hand, palm up, holding a croissant.
+ * Morrow & Crumb primary mark: a croissant resting in an open hand.
  *
- * Read from the side: the wrist enters low on the left, the palm opens into
- * fingers held together — separated by the thin lines that show when a hand is
- * seen edge-on — and the croissant rests across the open palm. The pastry is
- * one plump crescent with lamination seams and a glazed upper edge, so the
- * whole mark stays legible at 34px in the header and at full size during the
- * intro.
+ * The hand is reduced to the cradle it makes — a cupped palm seen edge-on,
+ * thickest under the pastry, tapering to the wrist at one end and to the
+ * fingertips at the other — so the croissant stays the subject and the
+ * silhouette still reads at 28px in the header.
  */
 export function BrandMark({ height = 40, className, title }: BrandMarkProps) {
   return (
     <svg
       className={className}
-      viewBox="30 28 222 168"
+      viewBox="0 0 200 132"
       height={height}
       role={title ? 'img' : 'presentation'}
       aria-label={title}
       aria-hidden={title ? undefined : true}
       focusable="false"
     >
-      {/* hand: wrist, palm and fingers as one silhouette */}
+      {/* the hand, reduced to the cradle it makes */}
       <path
-        d="M44 196 C40 168 44 141 58 124 C71 110 98 105 130 107
-           C160 109 192 107 214 101 C228 97 240 101 240 110
-           C240 121 231 130 216 135 C192 143 160 150 130 152
-           C101 154 82 161 74 196 Z"
+        d="M25 96
+           C20 104 24 114 35 120
+           C57 131 85 134 109 132
+           C136 130 161 121 175 107
+           C184 99 183 88 177 86
+           C172 97 160 105 146 111
+           C121 121 91 122 67 116
+           C47 111 34 104 31 96
+           C30 92 27 92 25 96 Z"
         fill="var(--skin)"
       />
-      {/* underside of the hand, out of the light */}
+
+      {/* the underside, out of the light */}
       <path
-        d="M74 196 C82 161 101 154 130 152 C160 150 192 143 216 135
-           C226 132 234 127 238 120 C236 132 227 141 213 147
-           C190 156 158 163 129 165 C104 167 88 174 82 196 Z"
+        d="M25 108
+           C27 115 30 119 35 122
+           C57 133 85 136 109 134
+           C135 132 159 124 173 112
+           C177 108 180 103 180 99
+           C178 106 171 113 160 119
+           C138 130 108 134 84 132
+           C60 130 40 124 31 116
+           C27 113 25 111 25 108 Z"
         fill="var(--skin-shade)"
+        opacity="0.85"
       />
+
       {/* fingers held together, seen edge-on */}
       <g
         fill="none"
         stroke="var(--skin-line)"
         strokeLinecap="round"
-        strokeWidth="1.8"
-        opacity="0.32"
+        strokeWidth="2.4"
+        opacity="0.3"
       >
-        <path d="M150 124 C176 122 202 117 224 110" />
-        <path d="M152 136 C176 133 200 128 220 121" />
-        <path d="M154 147 C174 144 194 139 210 133" />
+        <path d="M141 116 C154 112 165 106 173 99" />
+        <path d="M129 120 C143 116 155 110 164 103" />
+        <path d="M116 122 C130 119 142 114 151 108" />
       </g>
-      {/* palm crease */}
+
+      {/* the crease of the palm */}
       <path
-        d="M74 140 C88 152 106 158 128 159"
+        d="M40 110 C52 118 68 123 88 125"
         fill="none"
         stroke="var(--skin-line)"
         strokeLinecap="round"
-        strokeWidth="1.8"
-        opacity="0.26"
+        strokeWidth="2.4"
+        opacity="0.2"
       />
 
-      {/* the pastry settles into the palm */}
-      <ellipse cx="140" cy="116" rx="60" ry="8" fill="var(--skin-line)" opacity="0.18" />
+      {/* the pastry settles into the cup of the palm */}
+      <ellipse cx="100" cy="107" rx="40" ry="3.5" fill="var(--skin-line)" opacity="0.16" />
 
       {/* croissant */}
-      <g transform="translate(-28.3 -6.6) scale(1.066 1.083) rotate(-6 157 79)">
+      <g transform="translate(22 6) scale(1.14)">
         <path
-          d="M96 110 C86 80 102 54 132 48 C158 43 184 48 200 60 C218 74 224 96 214 110
-             C206 115 198 111 196 101 C191 95 172 92 150 92 C126 92 108 95 104 101
-             C102 111 102 115 96 110 Z"
+          d="M18 82
+             C21 50 42 30 70 30
+             C98 30 119 50 122 82
+             C116 87 107 85 104 76
+             C98 70 86 66 70 66
+             C54 66 42 70 36 76
+             C33 85 24 87 18 82 Z"
           fill="var(--crust)"
         />
         {/* glaze along the top of the bake */}
         <path
-          d="M101 96 C98 72 116 53 145 50 C165 48 182 51 194 58
-             C170 55 146 59 129 70 C113 80 104 88 101 96 Z"
+          d="M26 70
+             C33 48 50 34 70 33
+             C83 32 94 35 103 41
+             C89 36 74 38 61 44
+             C46 51 33 60 26 70 Z"
           fill="var(--crust-light)"
         />
         {/* lamination seams */}
@@ -86,31 +106,21 @@ export function BrandMark({ height = 40, className, title }: BrandMarkProps) {
           fill="none"
           stroke="var(--crust-dark)"
           strokeLinecap="round"
-          strokeWidth="2"
-          opacity="0.5"
+          strokeWidth="2.6"
+          opacity="0.55"
         >
-          <path d="M103 80 C108 88 110 95 110 101" />
-          <path d="M118 60 C122 72 124 82 124 93" />
-          <path d="M141 50 C143 64 144 76 144 90" />
-          <path d="M167 49 C166 63 166 76 166 90" />
-          <path d="M190 57 C186 69 185 80 186 92" />
-          <path d="M208 79 C204 88 203 95 203 101" />
+          <path d="M42 48 C46 56 48 63 48 70" />
+          <path d="M70 33 C70 43 70 51 70 58" />
+          <path d="M98 48 C94 56 92 63 92 70" />
         </g>
-        {/* underside, in shadow against the palm */}
+        {/* the underside, in shadow against the palm */}
         <path
-          d="M104 101 C108 95 126 92 150 92 C172 92 191 95 196 101
-             C186 97 168 96 150 96 C130 96 112 97 104 101 Z"
+          d="M36 76 C42 70 54 66 70 66 C86 66 98 70 104 76
+             C95 72 83 70 70 70 C57 70 45 72 36 76 Z"
           fill="var(--crust-dark)"
-          opacity="0.28"
+          opacity="0.3"
         />
       </g>
-
-      {/* ball of the thumb, on the near edge of the palm */}
-      <path
-        d="M58 126 C50 138 48 154 52 168 C56 156 60 143 66 133 Z"
-        fill="var(--skin-shade)"
-        opacity="0.55"
-      />
     </svg>
   );
 }

@@ -1,0 +1,756 @@
+/* =========================================================
+   The menu — a printed sheet, folded once down the middle
+   ========================================================= */
+.menu {
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+  /* the trellis, kept as tokens so its weight is tunable in one place */
+  --lattice-fine: 22px;
+  --lattice-main: 66px;
+  --lattice-thin: #b98f4a0f;
+  --lattice-thick: #b98f4a26;
+}
+
+/**
+ * A trellis behind the sheet: fine hairlines crossed on the diagonal, with a
+ * heavier pair every third cell, so it reads as a lattice with battens and
+ * infill rather than as graph paper. It sits behind everything, fades out top
+ * and bottom so it never meets the scalloped divider or the footer on a hard
+ * edge, and is only really seen in the margins either side of the paper.
+ */
+.menu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* a soft vignette, so the trellis sits on a surface rather than on flat
+       cream and the sheet reads as placed on top of it */
+    radial-gradient(75% 65% at 50% 48%, transparent 52%, #a8803f14 100%),
+    /* the battens */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 calc(var(--lattice-main) - 1px),
+      var(--lattice-thick) calc(var(--lattice-main) - 1px) var(--lattice-main)
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 calc(var(--lattice-main) - 1px),
+      var(--lattice-thick) calc(var(--lattice-main) - 1px) var(--lattice-main)
+    ),
+    /* the infill */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 calc(var(--lattice-fine) - 1px),
+      var(--lattice-thin) calc(var(--lattice-fine) - 1px) var(--lattice-fine)
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 calc(var(--lattice-fine) - 1px),
+      var(--lattice-thin) calc(var(--lattice-fine) - 1px) var(--lattice-fine)
+    );
+  -webkit-mask-image: linear-gradient(180deg, #0000 0%, #000 14%, #000 84%, #0000 100%);
+  mask-image: linear-gradient(180deg, #0000 0%, #000 14%, #000 84%, #0000 100%);
+}
+
+/* ---------- the sheet itself ---------- */
+.menu__paper {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+  background:
+    /* the crease catches light on one side and holds shadow on the other */
+    linear-gradient(90deg, transparent 46%, #8e70450d 49.6%, #fffefccc 50.2%, transparent 54%),
+    linear-gradient(115deg, #fffefc, #fbf7ee);
+  border: 1px solid #d9ccb5;
+  border-radius: 2px 3px 5px 2px;
+  box-shadow: 0 2px 3px #59432212, 0 16px 30px -16px #5943223d, 0 34px 60px -34px #59432229;
+  transition: transform 1000ms var(--ease-out), box-shadow 1000ms var(--ease-out);
+}
+
+/* the sheet is set down on the page as it scrolls into view */
+.menu__paper-stack[data-in='false'] .menu__paper {
+  transform: translateY(26px) rotateX(3.2deg) scale(0.988);
+  box-shadow: 0 1px 2px #5943220a, 0 6px 14px -10px #5943221f, 0 14px 26px -22px #59432214;
+}
+
+/* the paper grain, laid over the print but under the type */
+.menu__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/paper-grain.svg');
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* the double-ruled frame of a printed card */
+.menu__paper::before {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  border: 3px double #c9b48e80;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* a faint crease down the centre, with the fold's own soft shadow */
+.menu__fold {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 26px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(90deg, #8e704500 0%, #8e704514 44%, #8e70451f 50%, #fffdf7a6 56%, #fffdf700 100%);
+}
+
+/* where the fold meets the edges the paper has been handled most */
+.menu__fold::before,
+.menu__fold::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 16px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 50%, #8e704524, #8e704500 70%);
+}
+
+.menu__fold::before {
+  top: -1px;
+}
+
+.menu__fold::after {
+  bottom: -1px;
+}
+
+/* inner shadow around the four edges, so the sheet has thickness */
+.menu__inner-shadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: 0 1px 0 #fffdf7 inset, 0 0 0 1px #fffdf766 inset,
+    0 18px 26px -26px #594322a6 inset, 0 -14px 22px -24px #59432280 inset;
+}
+
+/* a slightly uneven cut along the foot of the sheet */
+.menu__deckle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    #d9ccb500 0 6px,
+    #d9ccb54d 6px 11px,
+    #d9ccb500 11px 19px
+  );
+}
+
+.menu__paper > header,
+.menu__paper > .menu__columns,
+.menu__paper > footer,
+.menu__print-details {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- printed head ---------- */
+.menu__print-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 1.75rem;
+  color: var(--honey-muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.menu__head {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.menu__ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  color: var(--honey-figure);
+}
+
+.menu__ornament svg {
+  width: 38px;
+  height: 48px;
+  transform: rotate(-25deg);
+}
+
+.menu__ornament svg:last-child {
+  transform: scaleX(-1) rotate(-25deg);
+}
+
+.menu__ornament .eyebrow {
+  font-family: var(--wordmark);
+  font-size: 1.2rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--honey-muted);
+}
+
+.menu__title {
+  margin-block: 0.6rem 0.85rem;
+  font-size: clamp(2.3rem, 4.5vw, 3.6rem);
+  letter-spacing: -0.035em;
+}
+
+.menu__title em {
+  color: var(--honey-figure);
+}
+
+.menu__head > p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.menu__head-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.75rem;
+  color: var(--honey-figure);
+  font-size: 1rem;
+}
+
+.menu__head-rule::before,
+.menu__head-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--panel-line);
+}
+
+/* ---------- columns ---------- */
+.menu__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.menu__column {
+  min-width: 0;
+  padding-right: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.menu__column + .menu__column {
+  padding-right: 0;
+  padding-left: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.menu__group + .menu__group {
+  margin-top: 1.75rem;
+}
+
+.menu__group-head {
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.menu__group-head h3 {
+  font-size: clamp(1.5rem, 2.3vw, 1.85rem);
+  color: var(--chocolate);
+}
+
+.menu__group-head > p {
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.menu__list > li + li {
+  border-top: 1px dotted var(--rule-strong);
+}
+
+/* each entry is laid onto the sheet in turn */
+.menu__entry {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.menu__paper-stack[data-in='true'] .menu__entry {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms var(--ease) calc(220ms + var(--i) * 70ms),
+    transform 700ms var(--ease-out) calc(220ms + var(--i) * 70ms);
+}
+
+/* =========================================================
+   One item
+   ========================================================= */
+.pastry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+  padding-block: 1.5rem;
+}
+
+.pastry__art {
+  position: relative;
+  padding-top: 0.2rem;
+}
+
+.pastry__svg {
+  position: relative;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 80%;
+  transition: transform 520ms var(--ease-out);
+}
+
+/* the illustration's own shadow, which grows as it lifts */
+.pastry__art-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 0.15rem;
+  width: 74%;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, #59432233, #59432200 72%);
+  opacity: 0;
+  transform: translateX(-50%) scale(0.8);
+  transition: opacity 520ms var(--ease), transform 520ms var(--ease-out);
+}
+
+.pastry__body {
+  min-width: 0;
+}
+
+.pastry__title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.pastry__name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.18rem;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--chocolate);
+}
+
+/* the rule that draws itself under the name */
+.pastry__name-text {
+  position: relative;
+  display: inline;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 0% 1px;
+  transition: background-size 560ms var(--ease-out);
+}
+
+/* dot leaders across to the price, the way a menu is set */
+.pastry__leaders {
+  flex: 1;
+  align-self: baseline;
+  min-width: 1rem;
+  height: 1px;
+  margin-bottom: 0.28em;
+  background-image: radial-gradient(circle, var(--rule-strong) 0.5px, transparent 0.6px);
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  opacity: 0.65;
+  transition: opacity 420ms var(--ease);
+}
+
+.pastry__price {
+  flex: none;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--honey-muted);
+  transition: color 420ms var(--ease), transform 420ms var(--ease-out);
+}
+
+.pastry__description {
+  margin-top: 0.5rem;
+  max-width: 46ch;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #5f574a;
+}
+
+.pastry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.pastry__category {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--honey-figure);
+}
+
+.pastry__note {
+  position: relative;
+  padding-left: 0.8rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--honey-muted);
+}
+
+.pastry__note::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 3px;
+  height: 3px;
+  background: var(--caramel);
+  transform: rotate(45deg);
+}
+
+/* ---------- hover and focus ---------- */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .pastry:hover .pastry__svg {
+    transform: translateY(-5px) rotate(-3deg) scale(1.04);
+  }
+
+  .pastry:hover .pastry__art-shadow {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.pastry:hover .pastry__name-text,
+.pastry:focus-within .pastry__name-text {
+  background-size: 100% 1px;
+}
+
+.pastry:hover .pastry__price,
+.pastry:focus-within .pastry__price {
+  color: var(--caramel);
+}
+
+.pastry:hover .pastry__leaders,
+.pastry:focus-within .pastry__leaders {
+  opacity: 1;
+}
+
+/* ---------- the ingredient disclosure ---------- */
+.pastry__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 32px;
+  margin-top: 0.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--honey-figure);
+  transition: color 320ms var(--ease);
+}
+
+.pastry__toggle:hover,
+.pastry__toggle:focus-visible {
+  color: var(--chocolate);
+}
+
+/* a small plus that turns into a minus */
+.pastry__toggle-mark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+
+.pastry__toggle-mark::before,
+.pastry__toggle-mark::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  transition: transform 420ms var(--ease-out);
+}
+
+.pastry__toggle-mark::after {
+  transform: rotate(90deg);
+}
+
+.pastry[data-open='true'] .pastry__toggle-mark::after {
+  transform: rotate(180deg);
+}
+
+.pastry__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 480ms var(--ease-out), visibility 480ms;
+}
+
+.pastry[data-open='true'] .pastry__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.pastry__ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 0.6rem;
+}
+
+.pastry__ingredients li {
+  padding: 0.2rem 0.6rem;
+  background: color-mix(in srgb, var(--honey) 24%, var(--warm-white));
+  border: 1px solid color-mix(in srgb, var(--honey-line) 55%, transparent);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--honey-muted);
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.pastry[data-open='true'] .pastry__ingredients li {
+  opacity: 1;
+  transform: none;
+  transition: opacity 420ms var(--ease) calc(120ms + var(--i) * 60ms),
+    transform 420ms var(--ease-out) calc(120ms + var(--i) * 60ms);
+}
+
+/* =========================================================
+   The featured item
+   -----------------------------------------------------------
+   Every row on the sheet is set identically — same column, same
+   illustration, same rhythm — so the list stays readable top to bottom. The
+   baker's pick is marked the way a printed menu marks one: a small line of
+   type above the name, and nothing else.
+   ========================================================= */
+.pastry__ribbon {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--caramel);
+}
+
+.pastry__ribbon > span {
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+/* the mark adds a line above the name, so the illustration drops by the same
+   amount — every row still lines its pastry up with its title */
+.pastry[data-feature] .pastry__art {
+  padding-top: 1.35rem;
+}
+
+/* ---------- the baker's note ---------- */
+.menu__bakers-note {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(150deg, #fffefccc, #f5efe2b3);
+  border: 1px dashed color-mix(in srgb, var(--panel-line) 80%, transparent);
+  color: var(--honey-muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.menu__bakers-note > span {
+  font-size: 1.5rem;
+  color: var(--caramel);
+}
+
+.menu__bakers-note small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---------- printed foot ---------- */
+.menu__foot {
+  margin-top: 1.8rem;
+  padding-top: 1.5rem;
+  border-top: 3px double var(--panel-line);
+  text-align: center;
+}
+
+.menu__foot > span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--honey-muted);
+}
+
+.menu__foot p {
+  max-width: 61ch;
+  margin: 0.45rem auto 0;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 800px) {
+  .menu__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .menu__column {
+    padding-right: 0;
+  }
+
+  .menu__column + .menu__column {
+    padding-left: 0;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    /* the fold no longer runs down the middle, so the seam runs across */
+    border-top: 1px solid var(--panel-line);
+  }
+
+  /* a single-fold sheet on a phone is folded the other way, so the printed
+     crease comes out of the paper's own gradient and runs across instead */
+  .menu__paper {
+    background: linear-gradient(115deg, #fffefc, #fbf7ee);
+  }
+
+  .menu__fold {
+    top: auto;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(180deg, #8e704500 0%, #8e704512 44%, #8e70451a 50%, #fffdf7a6 57%, #fffdf700 100%);
+  }
+
+  .menu__fold::before,
+  .menu__fold::after {
+    left: auto;
+    top: 50%;
+    width: 16px;
+    height: 9px;
+    transform: translateY(-50%);
+  }
+
+  .menu__fold::before {
+    left: -1px;
+  }
+
+  .menu__fold::after {
+    right: -1px;
+    bottom: auto;
+  }
+
+  .pastry {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .pastry__description {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .menu > .shell {
+    padding-inline: 0.9rem;
+  }
+
+  .menu__paper {
+    padding: 1.75rem 1.15rem;
+  }
+
+  .menu__paper::before {
+    inset: 7px;
+    border-width: 2px;
+  }
+
+  .menu__ornament {
+    gap: 0.6rem;
+  }
+
+  .menu__ornament svg {
+    width: 28px;
+    height: 38px;
+  }
+
+  .menu__ornament .eyebrow {
+    font-size: 1.05rem;
+  }
+
+  .menu__title {
+    font-size: 2.2rem;
+  }
+
+  .menu__head > p {
+    max-width: 27ch;
+    margin-inline: auto;
+  }
+
+  .menu__print-details {
+    gap: 0.5rem;
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+  }
+
+  .pastry {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .pastry__name {
+    font-size: 1.08rem;
+  }
+
+  /* names wrap at this width, so the leaders would be reduced to a stub */
+  .pastry__leaders {
+    display: none;
+  }
+
+  .pastry__price {
+    font-size: 0.98rem;
+  }
+
+  .pastry__description {
+    font-size: 0.85rem;
+  }
+
+  .menu__bakers-note {
+    padding: 0.9rem 1rem;
+  }
+}
